@@ -1,0 +1,6 @@
+bin/
+obj/
+proj/hangout-bot.xcodeproj/xcuserdata/
+.vs/
+*.suo
+*.vcxproj.user
