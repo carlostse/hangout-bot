@@ -1,6 +1,4 @@
-bin/
-obj/
-proj/hangout-bot.xcodeproj/xcuserdata/
-.vs/
-*.suo
-*.vcxproj.user
+__pycache__
+virtualenv
+*.iml
+.idea/

@@ -1,0 +1,3 @@
+PyYAML~=3.13
+certifi~=2018.8.24
+aiotg~=0.9.9
