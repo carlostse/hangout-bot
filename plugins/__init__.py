@@ -1,8 +1,9 @@
 from abc import abstractmethod
+from importlib import import_module
+from inspect import getmembers, isclass
 from os import path, listdir
 from re import match
-from inspect import getmembers, isclass
-from importlib import import_module
+
 from aiotg.bot import Bot, Chat
 
 
@@ -10,6 +11,9 @@ class Intent(object):
     """Base class for plugins.
 
     """
+    def __init__(self, config):
+        self._cfg = config
+
     @property
     @abstractmethod
     def command(self) -> str:
@@ -21,7 +25,7 @@ class Intent(object):
         pass
 
     @abstractmethod
-    def execute(self, chat: Chat, rematch: match):
+    async def execute(self, chat: Chat, rematch: match):
         """Execute the plugin to reply user.
 
         :param chat: chat
@@ -41,20 +45,22 @@ class PluginManager(object):
         self.plugins = dict()
 
     @staticmethod
-    def load(bot: Bot, directory: str=path.dirname(path.abspath(__file__))):
+    def load(bot: Bot, config: dict, directory: str=path.dirname(path.abspath(__file__))):
         """Load the plugins and return the bot.
 
-        :param bot: Bot
+        :param bot: bot
         :type bot: aiotg.bot.Bot
+        :param config: user config
+        :type config: dict
         :param directory: plugins directory
         :type directory: str
-        :return: Bot
+        :return: bot
         :rtype: aiotg.bot.Bot
         """
         mgr = PluginManager()
         mgr.load_directory(directory)
         for _, obj in mgr.plugins.items():
-            plugin = obj()
+            plugin = obj(config)
             bot.add_command(plugin.command, plugin.execute)
         return bot
 
@@ -93,7 +99,7 @@ class PluginManager(object):
                 self.load_directory(filepath, recursive)
 
         print('found %d plugins' % len(self.plugins))
-        print('loaded plugins: %s' % ','.join(self.plugins.keys()))
+        print('loaded plugins: %s' % ', '.join(self.plugins.keys()))
 
     @staticmethod
     def filter(name: str, obj: type) -> bool:

@@ -1,5 +1,7 @@
 from re import match
+
 from aiotg import Chat
+
 from plugins import Intent
 
 
@@ -9,5 +11,5 @@ class Echo(Intent):
     def command(self) -> str:
         return r'/echo (.+)'
 
-    def execute(self, chat: Chat, rematch: match):
-        return chat.reply(rematch.group(1))
+    async def execute(self, chat: Chat, rematch: match):
+        chat.reply(rematch.group(1))

@@ -17,8 +17,10 @@
 
 from argparse import ArgumentParser
 from os import environ, path
-from yaml import load as yaml_load
+
 from aiotg import Bot
+from yaml import load as yaml_load
+
 from plugins import PluginManager
 
 
@@ -33,7 +35,7 @@ class HangoutBot(object):
             cfg = yaml_load(cfg_file)
 
         bot = Bot(cfg['token'])
-        PluginManager.load(bot)
+        PluginManager.load(bot, cfg)
         bot.run(debug=self.debug, reload=False)
 
 
